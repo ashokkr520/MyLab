@@ -4,7 +4,12 @@ pipeline{
     tools {
         maven 'maven'
     }
-
+    environment{
+       ArtifactId = readMavenPom().getArtifactId()
+       Version = readMavenPom().getVersion()
+       Name = readMavenPom().getName()
+       GroupId = readMavenPom().getGroupId()
+    }
     stages {
         // Specify various stage with in stages
 
@@ -22,26 +27,53 @@ pipeline{
 
             }
         }
-        
 
-        //Publish the Artifcat to Nexus
+        // Stage3 : Publish the artifacts to Nexus
         stage ('Publish to Nexus'){
             steps {
-                nexusArtifactUploader artifacts: [[artifactId: 'VinayDevOpsLab', classifier: '', file: 'target/VinayDevOpsLab-0.0.4-SNAPSHOT.war', type: 'war']], credentialsId: '24b179aa-640b-4e86-a958-c4b4e51c80e9', groupId: 'com.vinaysdevopslab', nexusUrl: '172.20.10.161:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'AshokDevOpsLab-SNAPSHOT', version: '0.0.4-SNAPSHOT'
+                script {
+
+                def NexusRepo = Version.endsWith("SNAPSHOT") ? "VinaysDevOpsLab-SNAPSHOT" : "VinaysDevOpsLab-RELEASE"
+
+                nexusArtifactUploader artifacts: 
+                [[artifactId: "${ArtifactId}", 
+                classifier: '', 
+                file: "target/${ArtifactId}-${Version}.war", 
+                type: 'war']], 
+                credentialsId: '35e9b26e-269a-4804-a70d-6b2ec7a608ce', 
+                groupId: "${GroupId}", 
+                nexusUrl: '172.20.10.140:8081', 
+                nexusVersion: 'nexus3', 
+                protocol: 'http', 
+                repository: "${NexusRepo}", 
+                version: "${Version}"
+             }
             }
         }
 
+        // Stage 4 : Print some information
+        stage ('Print Environment variables'){
+                    steps {
+                        echo "Artifact ID is '${ArtifactId}'"
+                        echo "Version is '${Version}'"
+                        echo "GroupID is '${GroupId}'"
+                        echo "Name is '${Name}'"
+                    }
+                }
 
-        // Stage3: Deploying 
+        // Stage 5 : Deploying the build artifact to Apache Tomcat
         stage ('Deploy'){
             steps {
-                echo 'deploying.....'
+                echo 'deploying'
             }
-            
         }
 
-      
-        
+    // Stage 6 : Deploying the build artifact to Docker
+     
+
+
+
+
     }
 
 }

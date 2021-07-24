@@ -37,12 +37,12 @@ pipeline{
                 file: 'target/VinayDevOpsLab-0.0.4-SNAPSHOT.war',
                 type: 'war']],
                 credentialsId: '70b558b3-9198-4176-aea3-8f027710772d',
-                groupId: '${GroupId}',
+                groupId: "${GroupId}",
                 nexusUrl: '172.20.10.76:8081',
                 nexusVersion: 'nexus3',
                 protocol: 'http',
                 repository: 'AshokDevOpsLab-SNAPSHOT',
-                version: '${Version}'
+                version: "${Version}"
                             }
         }
 

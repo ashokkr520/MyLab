@@ -38,7 +38,7 @@ pipeline{
                 nexusArtifactUploader artifacts:
                 [[artifactId: "${ArtifactId}",
                 classifier: '',
-                file: 'target/VinayDevOpsLab-0.0.4-SNAPSHOT.war',
+                file: "target/${ArtifactId}-${Version}.war",
                 type: 'war']],
                 credentialsId: '70b558b3-9198-4176-aea3-8f027710772d',
                 groupId: "${GroupId}",

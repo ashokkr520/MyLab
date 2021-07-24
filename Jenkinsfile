@@ -32,7 +32,7 @@ pipeline{
         stage ('Publish to Nexus'){
             steps {
                 nexusArtifactUploader artifacts:
-                [[artifactId: '${ArtifactId}',
+                [[artifactId: "${ArtifactId}",
                 classifier: '',
                 file: 'target/VinayDevOpsLab-0.0.4-SNAPSHOT.war',
                 type: 'war']],
